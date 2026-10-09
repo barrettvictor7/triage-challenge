@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>60-Second Ear Triage Challenge | Hearing & Balance Doctors</title>
+    <style>
+        :root {
+            --primary-navy: #1A2E40; 
+            --slate-blue: #4B6B88;    
+            --accent-gold: #D4AF37;   
+            --dark-gray: #2C3539;
+            --white: #ffffff;
+            --cream: #FAF9F6;
+            --light-blue-bg: #F4F7F9;
+            --success-green: #29823B;
+            --error-red: #C62828;
+            --border-color: #E2E8F0;
+        }
+        
+        body {
+            font-family: Georgia, "Times New Roman", serif;
+            background: linear-gradient(135deg, #E2E8F0 0%, #F8FAFC 100%);
+            color: var(--dark-gray);
+            margin: 0;
+            padding: 20px 15px; 
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; 
+            min-height: 100dvh; 
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        /* App Container modified to look like the physical card */
+        .app-container {
+            background-color: var(--white);
+            max-width: 480px;
+            width: 100%;
+            border-radius: 4px; 
+            box-shadow: 0 25px 60px rgba(26, 46, 64, 0.15);
+            box-sizing: border-box;
+            padding: 15px; 
+            position: relative;
+            z-index: 10;
+            margin: auto; 
+        }
+
+        /* Elegant Inner Border */
+        .inner-border {
+            border: 1px solid var(--accent-gold);
+            width: 100%;
+            box-sizing: border-box;
+            padding: 25px 20px; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Typography & Spacing */
+        .logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .logo-placeholder {
+            max-width: 300px; 
+            width: 100%;
+            height: auto;
+        }
+
+        .kicker {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            color: var(--slate-blue);
+            text-transform: uppercase;
+            margin-bottom: 12px; 
+            font-weight: 600;
+            text-align: center;
+            width: 100%;
+        }
+
+        h1 {
+            color: var(--primary-navy);
+            font-size: 1.45rem;
+            line-height: 1.25;
+            margin: 0 0 15px 0;
+            font-weight: normal;
+            text-align: center;
+        }
+
+        .hook-text {
+            color: #444;
+            font-size: 1rem; 
+            line-height: 1.5;
+            margin: 0 0 20px 0;
+            text-align: center;
+            font-style: italic;
+        }
+
+        /* Refined Prize Banner */
+        .prize-banner {
+            background-color: var(--cream);
+            border-top: 1px solid var(--accent-gold);
+            border-bottom: 1px solid var(--accent-gold);
+            width: calc(100% + 40px); 
+            margin: 0 -20px 20px -20px;
+            padding: 12px 20px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .prize-text {
+            color: var(--primary-navy);
+            font-size: 0.85rem; 
+            font-weight: bold;
+            margin: 0 0 6px 0;
+            letter-spacing: 0.02em;
+        }
+
+        .gratitude-text {
+            color: #555;
+            font-size: 0.8rem;
+            font-style: italic;
+            margin: 0;
+            letter-spacing: 0.01em;
+        }
+
+        /* Quiz UI Elements */
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 8px;
+        }
+
+        .vignette-title {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            color: var(--slate-blue);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .counter {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-size: 0.75rem;
+            color: var(--slate-blue);
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+
+        .progress-bar {
+            height: 2px;
+            background-color: #E2E8F0;
+            width: 100%;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--accent-gold);
+            width: 0%;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .vignette-prompt {
+            font-size: 1.05rem;
+            line-height: 1.6;
+            margin-bottom: 20px; 
+            padding: 16px 20px;
+            background-color: var(--white);
+            border-left: 3px solid var(--accent-gold);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Premium Buttons */
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px; 
+            width: 100%;
+        }
+
+        button {
+            appearance: none;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            border: none;
+            padding: 14px 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            border-radius: 4px; 
+            cursor: pointer;
+            transition: all 0.25s ease;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-navy);
+            color: var(--white);
+            box-shadow: 0 4px 12px rgba(26, 46, 64, 0.15);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--slate-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(26, 46, 64, 0.25);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--slate-blue);
+            color: var(--slate-blue);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--light-blue-bg);
+            border-color: var(--primary-navy);
+            color: var(--primary-navy);
+        }
+        
+        .btn-next {
+            background-color: var(--slate-blue);
+            color: white;
+            margin-top: 16px;
+        }
+        
+        .btn-next:hover {
+            background-color: var(--primary-navy);
+        }
+
+        /* Refined Feedback Box */
+        .feedback-box {
+            display: none;
+            margin-top: 15px;
+            padding: 16px 20px;
+            border-radius: 4px;
+            animation: fadeIn 0.4s ease;
+            border: 1px solid transparent;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .feedback-box.show {
+            display: block;
+        }
+
+        .feedback-box.correct-state {
+            background-color: #F6FCF7;
+            border-color: #CDECDF;
+            color: #1F4A2C;
+        }
+        
+        .feedback-box.incorrect-state {
+            background-color: #FFF8F8;
+            border-color: #FCD7D7;
+            color: #7F1D1D;
+        }
+
+        .feedback-title {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        
+        .feedback-title.correct-text { color: var(--success-green); }
+        .feedback-title.incorrect-text { color: var(--error-red); }
+
+        .feedback-text {
+            font-size: 1rem;
+            line-height: 1.55;
+            font-family: Georgia, serif;
+        }
+
+        /* Footer Info */
+        .footer-section {
+            width: 100%;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .clinic-name {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: var(--primary-navy);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            margin: 0 0 8px 0;
+            text-transform: uppercase;
+        }
+
+        .clinic-details {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: #666;
+            font-size: 0.7rem; 
+            line-height: 1.6;
+            margin: 0;
+            letter-spacing: 0.02em;
+        }
+
+        .website-link {
+            display: inline-block;
+            margin-top: 12px;
+            color: var(--slate-blue);
+            text-decoration: none;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-size: 0.7rem;
+            transition: color 0.2s ease;
+        }
+
+        .website-link:hover {
+            color: var(--primary-navy);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Confetti Container */
+        #confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .confetti-piece {
+            position: absolute;
+            width: 10px;
+            height: 20px;
+            background: #f00;
+            animation: fall linear forwards;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes fall {
+            to { transform: translateY(100vh) rotate(720deg); }
+        }
+        
+        /* End Screen specific adjustments */
+        #end-screen {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+<div id="confetti-container"></div>
+
+<div class="app-container" id="app">
+    <div class="inner-border">
+        
+        <div class="logo-container">
+            <img src="hbd_logo.jpg" alt="Hearing & Balance Doctors" class="logo-placeholder" onerror="this.outerHTML='<h2 style=\'margin:0;font-family:Georgia,serif;font-weight:normal;color:#1A2E40;\'>HEARING <span style=\'color:#4B6B88\'>&</span> BALANCE</h2><p style=\'margin:2px 0 0;font-size:0.7rem;letter-spacing:4px;color:#1A2E40;text-transform:uppercase;font-family:sans-serif;\'>D O C T O R S</p>'">
+        </div>
+
+        <!-- Start Screen -->
+        <div id="start-screen" style="width: 100%;">
+            <div class="kicker">Provider Challenge</div>
+            <h1>60-Second Ear Triage</h1>
+            <p class="hook-text">
+                Can you spot which patients actually need an Otolaryngologist vs which ones should be routed to Audiology?
+            </p>
+            
+            <div class="prize-banner">
+                <p class="prize-text">Score 6/6 to unlock premium custom YETI tumblers for your clinic staff.</p>
+                <p class="gratitude-text">Thank you for trusting us with your patients' care.</p>
+            </div>
+
+            <button class="btn-primary" onclick="startQuiz()">Begin Challenge</button>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" class="hidden" style="width: 100%;">
+            <div class="progress-header">
+                <div class="vignette-title" id="v-title">Title Here</div>
+                <div class="counter" id="counter">1 / 6</div>
+            </div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress"></div>
+            </div>
+            
+            <div class="vignette-prompt" id="v-prompt">Prompt text goes here...</div>
+            
+            <div class="button-group" id="answer-buttons">
+                <button class="btn-primary" onclick="handleAnswer('audiology')">Route to Audiology</button>
+                <button class="btn-outline" onclick="handleAnswer('ent')">Refer to ENT</button>
+            </div>
+
+            <div class="feedback-box" id="feedback">
+                <div class="feedback-title" id="feedback-title-container">
+                    <svg id="feedback-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></svg>
+                    <span id="feedback-title-text"></span>
+                </div>
+                <div class="feedback-text" id="v-feedback">Feedback text...</div>
+                <button class="btn-next" id="btn-next" onclick="nextVignette()">Next Scenario</button>
+            </div>
+        </div>
+
+        <!-- End Screen -->
+        <div id="end-screen" class="hidden">
+            <div class="kicker">Challenge Complete</div>
+            <h1 id="end-title" style="margin-bottom: 25px;">Triage Review</h1>
+            
+            <!-- Dynamic Prize Box (Always visible, text changes based on score) -->
+            <div id="prize-container" class="hidden prize-banner" style="margin-bottom: 25px;">
+                <p id="dynamic-score-title" class="prize-text" style="font-size: 1.1rem; text-transform: uppercase;">Perfect Score</p>
+                <p id="dynamic-score-text" class="hook-text" style="font-style: normal; font-family: -apple-system, sans-serif; font-size: 0.85rem; padding: 0 10px; margin: 10px 0 0 0; color: var(--dark-gray);">
+                    Score description...
+                </p>
+            </div>
+
+            <!-- This text now changes dynamically based on the score -->
+            <p id="value-prop-text" class="hook-text" style="margin-bottom: 25px;">
+                Value Prop Text...
+            </p>
+            
+            <p style="font-family: Georgia, serif; font-size: 1.25rem; color: var(--slate-blue); text-align: center; margin: 0 0 10px 0;">
+                Route the right ear to the right specialist.
+            </p>
+
+            <button class="btn-outline" style="margin-top: 20px;" onclick="restartChallenge()">↺ Retake Challenge</button>
+            
+            <div class="footer-section">
+                <p class="clinic-name">Hearing & Balance Doctors</p>
+                <p class="clinic-details">
+                    <strong>Utah:</strong> St. George, Hurricane, Santa Clara, Cedar City &nbsp;|&nbsp; Mesquite (NV)<br><br>
+                    <strong>Phone:</strong> (435) 688-8991 &nbsp;|&nbsp; <strong>Fax:</strong> (435) 688-8992
+                </p>
+                <a href="https://hearingdoctors.net" target="_blank" class="website-link">hearingdoctors.net</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    const vignettes = [
+        {
+            title: "Scenario 1", 
+            prompt: "68-year-old male reports gradual hearing decline over 1-3 years. The left ear is noticeably worse; he is a right-handed shooter and former truck driver. Normal otoscopy.",
+            feedback: "Documented noise-induced asymmetry does not require surgical clearance. We perform the comprehensive diagnostic evaluation, interaural asymmetry metrics, and evaluate amplification candidacy. If asymmetry exceeds red-flag thresholds without a clear acoustic explanation, <strong>we will coordinate the MRI and ENT referral for you.</strong>"
+        },
+        {
+            title: "Scenario 2", 
+            prompt: "72-year-old female experiences 30-second bouts of intense vertigo induced by certain movements (e.g., rolling over in bed, bending over, looking up, etc.) No hearing changes, normal cranial nerves.",
+            feedback: "BPPV is a mechanical canalithiasis (or sometimes cupulolithiasis), not an active middle ear infection. Sending to ENT often results in weeks or months of waiting. We perform immediate diagnostic Dix-Hallpike testing and often execute canalith repositioning maneuvers (like the Epley) for <strong>acute resolution in the same visit.</strong>"
+        },
+        {
+            title: "Scenario 3", 
+            prompt: "55-year-old female complains of a constant, high-pitched ringing in both ears for the past six months. No complaints of any hearing issues.",
+            feedback: "99% of the time, subjective tinnitus is driven by cochlear damage and central neural changes, leaving no surgical or medical fix for an ENT to perform. We perform high-frequency threshold mapping, minimum masking levels, and evidence-based habituation protocols. <strong>(Note: Tinnitus that synchronizes with the pulse is a red flag requiring ENT/imaging).</strong>"
+        },
+        {
+            title: "Scenario 4", 
+            prompt: "45-year-old male reports his left ear has felt \"clogged\" and \"full\" for the past three weeks. He continuously tries to \"pop\" it without relief. Basic otoscopy shows a clear ear canal.",
+            feedback: "Patients frequently confuse the onset of a sensorineural hearing loss with \"congestion.\" We perform immediate tympanometry, acoustic reflexes, and comprehensive audiometry to differentiate true middle ear dysfunction from cochlear or neural pathologies. If it is an active middle ear issue requiring medical management, ENT will require our audiogram anyway—<strong>sending them to us first ensures a faster, fully triaged referral.</strong>"
+        },
+        {
+            title: "Scenario 5", 
+            prompt: "40-year-old male follows up 2 weeks post-ER visit for severe, constant vertigo that lasted 48 hours. Suppressants are stopped, but he remains \"off balance\" and is still experiencing motion-induced vertigo.",
+            feedback: "Once the acute phase is over, ENT has minimal ongoing medical interventions. <strong>We objectively map the deficit</strong> through posturography, VNG, and VEMPs. This provides the quantitative foundation for targeted Vestibular Rehabilitation Therapy (VRT) to promote central compensation."
+        },
+        {
+            title: "Scenario 6", 
+            prompt: "35-year-old female passes your hearing screener but reports severe difficulty understanding speech in crowded restaurants or rapid conversation. Otoscopy is unremarkable.",
+            feedback: "ENTs are surgeons of the head and neck; they do not perform neuro-audiological processing evaluations. <strong>We test higher order auditory processing</strong> (e.g., speech in noise testing) and evaluate for low-gain hearing aid trials or remote microphone systems."
+        }
+    ];
+
+    let currentIndex = 0;
+    let score = 0;
+    let failedAttempts = 0; // Tracks non-perfect completions for dynamic messaging
+
+    function startQuiz() {
+        document.getElementById('start-screen').classList.add('hidden');
+        document.getElementById('quiz-screen').classList.remove('hidden');
+        loadVignette();
+    }
+
+    function loadVignette() {
+        window.scrollTo(0, 0); 
+        
+        const v = vignettes[currentIndex];
+        document.getElementById('v-title').innerText = v.title;
+        document.getElementById('v-prompt').innerText = v.prompt;
+        document.getElementById('v-feedback').innerHTML = v.feedback;
+        
+        const feedbackBox = document.getElementById('feedback');
+        feedbackBox.className = 'feedback-box'; 
+        document.getElementById('answer-buttons').style.display = 'flex';
+        
+        const progressPercent = ((currentIndex) / vignettes.length) * 100;
+        document.getElementById('progress').style.width = `${progressPercent}%`;
+        document.getElementById('counter').innerText = `${currentIndex + 1} / ${vignettes.length}`;
+
+        const btnNext = document.getElementById('btn-next');
+        if (currentIndex === vignettes.length - 1) {
+            btnNext.innerText = "SEE RESULTS";
+        } else {
+            btnNext.innerText = "NEXT SCENARIO";
+        }
+    }
+
+    function handleAnswer(choice) {
+        document.getElementById('answer-buttons').style.display = 'none';
+        
+        const feedbackBox = document.getElementById('feedback');
+        const feedbackTitleContainer = document.getElementById('feedback-title-container');
+        const feedbackTitleText = document.getElementById('feedback-title-text');
+        const feedbackIcon = document.getElementById('feedback-icon');
+        
+        feedbackBox.classList.add('show');
+
+        if (choice === 'audiology') {
+            score++;
+            feedbackBox.classList.add('correct-state');
+            feedbackTitleContainer.className = 'feedback-title correct-text';
+            feedbackTitleText.innerText = "Correct! Route to Audiology";
+            feedbackIcon.innerHTML = '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline>';
+        } else {
+            feedbackBox.classList.add('incorrect-state');
+            feedbackTitleContainer.className = 'feedback-title incorrect-text';
+            feedbackTitleText.innerText = "Not Quite! Route to Audiology";
+            feedbackIcon.innerHTML = '<circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line>';
+        }
+
+        setTimeout(() => {
+            document.getElementById('btn-next').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 100);
+    }
+
+    function nextVignette() {
+        currentIndex++;
+        if (currentIndex < vignettes.length) {
+            loadVignette();
+        } else {
+            showEndScreen();
+        }
+    }
+
+    function showEndScreen() {
+        document.getElementById('quiz-screen').classList.add('hidden');
+        document.getElementById('end-screen').classList.remove('hidden');
+        document.getElementById('end-title').style.display = 'none';
+
+        const prizeContainer = document.getElementById('prize-container');
+        const scoreTitle = document.getElementById('dynamic-score-title');
+        const scoreText = document.getElementById('dynamic-score-text');
+        const valuePropText = document.getElementById('value-prop-text');
+        
+        prizeContainer.classList.remove('hidden');
+
+        if (score === 6) {
+            fireConfetti();
+            scoreTitle.innerText = "Perfect Score — 6/6";
+            scoreTitle.style.color = "var(--accent-gold)";
+            scoreText.innerHTML = "You have flawless referral instincts! Take a screenshot of this page and text it to our provider line to claim <strong>custom YETI tumblers for your team</strong>.";
+            
+            // Standard winning paragraph
+            valuePropText.innerText = "By routing these common conditions directly to Audiology, you bypass long surgical waitlists, save your staff time, and ensure patients are treated immediately.";
+        } else {
+            scoreTitle.innerText = `Final Score — ${score}/6`;
+            scoreTitle.style.color = "var(--slate-blue)";
+            scoreText.innerHTML = "Great instincts, but you left a few on the table. Give it another shot to unlock the custom YETI tumblers for your clinic.";
+            
+            // Alternate non-winning paragraphs based on attempt count
+            if (failedAttempts % 2 === 0) {
+                valuePropText.innerText = "Every correct referral helps patients avoid unnecessary delays in care. Take another shot to perfect your triage instincts!";
+            } else {
+                valuePropText.innerText = "Getting patients to the right specialist the first time accelerates their path to relief. Review the scenarios and try again!";
+            }
+            
+            // Increment the counter so the next time they fail, they see the other message
+            failedAttempts++;
+        }
+    }
+
+    function restartChallenge() {
+        currentIndex = 0;
+        score = 0;
+        
+        document.getElementById('end-screen').classList.add('hidden');
+        document.getElementById('prize-container').classList.add('hidden');
+        document.getElementById('end-title').style.display = 'block';
+        document.getElementById('confetti-container').innerHTML = '';
+        
+        document.getElementById('start-screen').classList.remove('hidden');
+        
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function fireConfetti() {
+        const container = document.getElementById('confetti-container');
+        const colors = ['#4B6B88', '#D4AF37', '#1A2E40', '#29823B'];
+        const earSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8.5a6.5 6.5 0 1 1 13 0c0 6-6 6-6 10a3.5 3.5 0 1 1-7 0"/><path d="M15 8.5a2.5 2.5 0 0 0-5 0v1a2 2 0 1 1 0 4"/></svg>`;
+        
+        for (let i = 0; i < 75; i++) {
+            const confetti = document.createElement('div');
+            confetti.classList.add('confetti-piece');
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            confetti.style.animationDelay = Math.random() * 0.5 + 's';
+
+            if (Math.random() > 0.7) {
+                confetti.innerHTML = earSvg;
+                confetti.style.background = 'transparent';
+                confetti.style.color = (Math.random() > 0.5) ? '#1A2E40' : '#4B6B88';
+                confetti.style.width = '24px';
+                confetti.style.height = '24px';
+            } else {
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            }
+            container.appendChild(confetti);
+        }
+    }
+</script>
+
+</body>
+</html>
